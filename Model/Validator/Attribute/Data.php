@@ -4,15 +4,15 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\Eav\Model\Validator\Attribute;
-
-use Magento\Eav\Model\Attribute;
-
 /**
  * EAV attribute data validator
  *
  * @author     Magento Core Team <core@magentocommerce.com>
  */
+namespace Magento\Eav\Model\Validator\Attribute;
+
+use Magento\Eav\Model\Attribute;
+
 class Data extends \Magento\Framework\Validator\AbstractValidator
 {
     /**
@@ -23,12 +23,12 @@ class Data extends \Magento\Framework\Validator\AbstractValidator
     /**
      * @var array
      */
-    protected $allowedAttributesList = [];
+    protected $_attributesWhiteList = [];
 
     /**
      * @var array
      */
-    protected $deniedAttributesList = [];
+    protected $_attributesBlackList = [];
 
     /**
      * @var array
@@ -68,9 +68,9 @@ class Data extends \Magento\Framework\Validator\AbstractValidator
      * @param array $attributesCodes
      * @return $this
      */
-    public function setAllowedAttributesList(array $attributesCodes)
+    public function setAttributesWhiteList(array $attributesCodes)
     {
-        $this->allowedAttributesList = $attributesCodes;
+        $this->_attributesWhiteList = $attributesCodes;
         return $this;
     }
 
@@ -82,9 +82,9 @@ class Data extends \Magento\Framework\Validator\AbstractValidator
      * @param array $attributesCodes
      * @return $this
      */
-    public function setDeniedAttributesList(array $attributesCodes)
+    public function setAttributesBlackList(array $attributesCodes)
     {
-        $this->deniedAttributesList = $attributesCodes;
+        $this->_attributesBlackList = $attributesCodes;
         return $this;
     }
 
@@ -126,7 +126,7 @@ class Data extends \Magento\Framework\Validator\AbstractValidator
             $dataModel = $this->_attrDataFactory->create($attribute, $entity);
             $dataModel->setExtractedData($data);
             if (!isset($data[$attributeCode])) {
-                $data[$attributeCode] = '';
+                $data[$attributeCode] = null;
             }
             $result = $dataModel->validateValue($data[$attributeCode]);
             if (true !== $result) {
@@ -171,11 +171,11 @@ class Data extends \Magento\Framework\Validator\AbstractValidator
             $attributesCodes[] = $attributeCode;
         }
 
-        $ignoreAttributes = $this->deniedAttributesList;
-        if ($this->allowedAttributesList) {
+        $ignoreAttributes = $this->_attributesBlackList;
+        if ($this->_attributesWhiteList) {
             $ignoreAttributes = array_merge(
                 $ignoreAttributes,
-                array_diff($attributesCodes, $this->allowedAttributesList)
+                array_diff($attributesCodes, $this->_attributesWhiteList)
             );
         }
 

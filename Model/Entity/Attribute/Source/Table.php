@@ -9,8 +9,6 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Eav attribute default source when values are coming from another table
- *
  * @api
  * @since 100.0.2
  */
@@ -129,14 +127,12 @@ class Table extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
     }
 
     /**
-     * Add an empty option to the array
-     *
      * @param array $options
      * @return array
      */
     private function addEmptyOption(array $options)
     {
-        array_unshift($options, ['label' => ' ', 'value' => '']);
+        array_unshift($options, ['label' => $this->getAttribute()->getIsRequired() ? '' : ' ', 'value' => '']);
         return $options;
     }
 
@@ -211,13 +207,9 @@ class Table extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
             $collection,
             $attribute,
             $valueExpr
-        )->addOptionToCollection(
-            $collection,
-            $attribute,
-            $valueExpr
         );
 
-        $collection->getSelect()->order("{$attribute->getAttributeCode()}_order {$dir}");
+        $collection->getSelect()->order("{$attribute->getAttributeCode()} {$dir}");
 
         return $this;
     }

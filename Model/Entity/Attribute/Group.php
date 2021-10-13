@@ -3,16 +3,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\Eav\Model\Entity\Attribute;
 
-use Magento\Eav\Api\Data\AttributeGroupExtensionInterface;
 use Magento\Framework\Api\AttributeValueFactory;
-use Magento\Framework\Exception\LocalizedException;
 
 /**
- * Entity attribute group model
- *
  * @api
  * @method int getSortOrder()
  * @method \Magento\Eav\Model\Entity\Attribute\Group setSortOrder(int $value)
@@ -33,11 +28,6 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
     private $translitFilter;
 
     /**
-     * @var array
-     */
-    private $reservedSystemNames = [];
-
-    /**
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
@@ -45,8 +35,7 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
      * @param \Magento\Framework\Filter\Translit $translitFilter
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
-     * @param array $data (optional)
-     * @param array $reservedSystemNames (optional)
+     * @param array $data
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -56,8 +45,7 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
         \Magento\Framework\Filter\Translit $translitFilter,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = [],
-        array $reservedSystemNames = []
+        array $data = []
     ) {
         parent::__construct(
             $context,
@@ -68,7 +56,6 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
             $resourceCollection,
             $data
         );
-        $this->reservedSystemNames = $reservedSystemNames;
         $this->translitFilter = $translitFilter;
     }
 
@@ -87,7 +74,6 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
      * Checks if current attribute group exists
      *
      * @return bool
-     * @throws LocalizedException
      * @codeCoverageIgnore
      */
     public function itemExists()
@@ -99,7 +85,6 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
      * Delete groups
      *
      * @return $this
-     * @throws LocalizedException
      * @codeCoverageIgnore
      */
     public function deleteGroups()
@@ -125,10 +110,9 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
                     ),
                     '-'
                 );
-                $isReservedSystemName = in_array(strtolower($attributeGroupCode), $this->reservedSystemNames);
-                if (empty($attributeGroupCode) || $isReservedSystemName) {
+                if (empty($attributeGroupCode)) {
                     // in the following code md5 is not used for security purposes
-                    $attributeGroupCode = md5(strtolower($groupName));
+                    $attributeGroupCode = md5($groupName);
                 }
                 $this->setAttributeGroupCode($attributeGroupCode);
             }
@@ -137,8 +121,7 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
     }
 
     /**
-     * @inheritdoc
-     *
+     * {@inheritdoc}
      * @codeCoverageIgnoreStart
      */
     public function getAttributeGroupId()
@@ -147,7 +130,7 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAttributeGroupName()
     {
@@ -155,7 +138,7 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAttributeSetId()
     {
@@ -163,7 +146,7 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setAttributeGroupId($attributeGroupId)
     {
@@ -171,7 +154,7 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setAttributeGroupName($attributeGroupName)
     {
@@ -179,7 +162,7 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setAttributeSetId($attributeSetId)
     {
@@ -187,9 +170,9 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
-     * @return AttributeGroupExtensionInterface|null
+     * @return \Magento\Eav\Api\Data\AttributeGroupExtensionInterface|null
      */
     public function getExtensionAttributes()
     {
@@ -197,13 +180,14 @@ class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
-     * @param AttributeGroupExtensionInterface $extensionAttributes
+     * @param \Magento\Eav\Api\Data\AttributeGroupExtensionInterface $extensionAttributes
      * @return $this
      */
-    public function setExtensionAttributes(AttributeGroupExtensionInterface $extensionAttributes)
-    {
+    public function setExtensionAttributes(
+        \Magento\Eav\Api\Data\AttributeGroupExtensionInterface $extensionAttributes
+    ) {
         return $this->_setExtensionAttributes($extensionAttributes);
     }
 

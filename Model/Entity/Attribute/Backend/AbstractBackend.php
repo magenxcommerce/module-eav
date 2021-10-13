@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\Eav\Model\Entity\Attribute\Backend;
 
@@ -205,12 +204,12 @@ abstract class AbstractBackend implements \Magento\Eav\Model\Entity\Attribute\Ba
     /**
      * Retrieve default value
      *
-     * @return string
+     * @return mixed
      */
     public function getDefaultValue()
     {
         if ($this->_defaultValue === null) {
-            if ($this->getAttribute()->getDefaultValue() !== null) {
+            if ($this->getAttribute()->getDefaultValue()) {
                 $this->_defaultValue = $this->getAttribute()->getDefaultValue();
             } else {
                 $this->_defaultValue = "";
@@ -286,7 +285,7 @@ abstract class AbstractBackend implements \Magento\Eav\Model\Entity\Attribute\Ba
     public function beforeSave($object)
     {
         $attrCode = $this->getAttribute()->getAttributeCode();
-        if (!$object->hasData($attrCode) && $this->getDefaultValue() !== '') {
+        if (!$object->hasData($attrCode) && $this->getDefaultValue()) {
             $object->setData($attrCode, $this->getDefaultValue());
         }
 
@@ -349,8 +348,9 @@ abstract class AbstractBackend implements \Magento\Eav\Model\Entity\Attribute\Ba
     }
 
     /**
-     * By default attribute value is considered scalar that can be stored in a generic way {@inheritdoc}
+     * By default attribute value is considered scalar that can be stored in a generic way
      *
+     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function isScalar()

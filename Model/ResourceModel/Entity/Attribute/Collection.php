@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\Eav\Model\ResourceModel\Entity\Attribute;
 
 use Magento\Eav\Model\Entity\Type;
@@ -129,7 +128,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     /**
      * Specify attribute set filter
      *
-     * @param int|int[] $setId
+     * @param int $setId
      * @return $this
      */
     public function setAttributeSetFilter($setId)
@@ -184,7 +183,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
 
     /**
      * Specify multiple attribute sets filter
-     *
      * Result will be ordered by sort_order
      *
      * @param array $setIds
@@ -227,6 +225,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
                 ->having(new \Zend_Db_Expr('COUNT(*)') . ' = ' . count($setIds));
         }
 
+        //$this->getSelect()->distinct(true);
         $this->setOrder('is_user_defined', self::SORT_ORDER_ASC);
 
         return $this;
@@ -476,7 +475,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSelectCountSql()
     {
